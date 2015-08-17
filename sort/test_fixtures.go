@@ -1,8 +1,14 @@
 package sort
 
-import "math/rand"
+import (
+	"math/rand"
+	"sort"
+	"testing"
+)
 
 const mainConst = 42
+
+type SortFunction func([]int) []int
 
 func init() {
 	rand.Seed(mainConst)
@@ -26,4 +32,18 @@ func MakeReversedArray() []int {
 		reversedArray[mainConst-i-1] = i
 	}
 	return reversedArray
+}
+
+func TestSort(t *testing.T, sortFn SortFunction) {
+	sorted := MakeSortedArray()
+	random := MakeRandArray()
+	reversed := MakeReversedArray()
+
+	sortFn(sorted)
+	sortFn(random)
+	sortFn(reversed)
+
+	if !(sort.IntsAreSorted(sorted) && sort.IntsAreSorted(random) && sort.IntsAreSorted(reversed)) {
+		t.Errorf("Wrong behavior:\n%v\n%v\n%v", sorted, random, reversed)
+	}
 }
