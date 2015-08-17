@@ -23,7 +23,7 @@ func MakeSortedArray() []int {
 func MakeReversedArray() []int {
 	reversedArray := make([]int, mainConst)
 	for i := 0; i < mainConst; i++ {
-		reversedArray[i] = i
+		reversedArray[mainConst-i-1] = i
 	}
 	return reversedArray
 }
