@@ -39,9 +39,9 @@ func TestSort(t *testing.T, sortFn SortFunction) {
 	random := MakeRandArray()
 	reversed := MakeReversedArray()
 
-	sortFn(sorted)
-	sortFn(random)
-	sortFn(reversed)
+	sorted = sortFn(sorted)
+	random = sortFn(random)
+	reversed = sortFn(reversed)
 
 	if !(sort.IntsAreSorted(sorted) && sort.IntsAreSorted(random) && sort.IntsAreSorted(reversed)) {
 		t.Errorf("Wrong behavior:\n%v\n%v\n%v", sorted, random, reversed)
