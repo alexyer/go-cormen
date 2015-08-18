@@ -5,6 +5,7 @@ package sort
 // Have 2 steps:
 //	1. Divide unsorted list into n sublists, each containing 1 element (a list of 1 element is considered sorted).
 //	2. Repetedly merge sublists to produce new sorted sublists until there is only 1 sorted sublist remaining.
+// Time complexity: W: O(n log n) B: O(n log n) A: O(n log n)
 func MergeSort(array []int) []int {
 	if len(array) < 2 {
 		return array
