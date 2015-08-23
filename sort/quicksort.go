@@ -59,3 +59,32 @@ func RandomizedPartition(a []int, lo, hi int) int {
 	a[hi], a[i] = a[hi], a[i]
 	return Partition(a, lo, hi)
 }
+
+// The original partition scheme described by Hoare uses two indices that start at the ends of the array being partioned,
+// then move toward each other, until they detect an inversion and swap inverted elements.
+// When indices meet,the algorithm stops and returns the final index.
+func HoareQuickSort(a []int) []int {
+	return Sort(a, 0, len(a)-1, HoarePartition)
+}
+
+func HoarePartition(a []int, lo, hi int) int {
+	x := a[lo]
+	i := lo
+	j := hi
+
+	for {
+		for a[j] > x {
+			j--
+		}
+
+		for a[i] < x {
+			i++
+		}
+
+		if i < j {
+			a[i], a[j] = a[j], a[i]
+		} else {
+			return j
+		}
+	}
+}

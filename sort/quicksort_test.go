@@ -7,5 +7,9 @@ func TestQuickSort(t *testing.T) {
 }
 
 func TestRandomizedQuickSort(t *testing.T) {
-	TestSort(t, QuickSort)
+	TestSort(t, RandomizedQuickSort)
+}
+
+func TestHoareQuickSort(t *testing.T) {
+	TestSort(t, HoareQuickSort)
 }
