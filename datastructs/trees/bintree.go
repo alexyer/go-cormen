@@ -1,10 +1,16 @@
 package trees
 
+import "fmt"
+
 // Binary tree with integer values.
 type Tree struct {
 	Left  *Tree
 	Value int
 	Right *Tree
+}
+
+func (t *Tree) String() string {
+	return fmt.Sprintf("{Left node: %p, Value: %d, Right node: %p}", t.Left, t.Value, t.Right)
 }
 
 // Traverse a tree depth-first, sending each Value on a channel.
@@ -52,4 +58,17 @@ func Insert(t *Tree, val int) *Tree {
 	}
 	t.Right = Insert(t.Right, val)
 	return t
+}
+
+// The procedure begins its search at the root and traces a simple path downward in the tree.
+func Search(t *Tree, val int) *Tree {
+	if t == nil || val == t.Value {
+		return t
+	}
+
+	if val < t.Value {
+		return Search(t.Left, val)
+	} else {
+		return Search(t.Right, val)
+	}
 }
