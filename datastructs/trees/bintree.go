@@ -72,3 +72,25 @@ func Search(t *Tree, val int) *Tree {
 		return Search(t.Right, val)
 	}
 }
+
+// Return node with minimum value
+func Min(t *Tree) *Tree {
+	x := t
+
+	for x.Left != nil {
+		x = x.Left
+	}
+
+	return x
+}
+
+// Return node with maximum value
+func Max(t *Tree) *Tree {
+	x := t
+
+	for x.Right != nil {
+		x = x.Right
+	}
+
+	return x
+}
