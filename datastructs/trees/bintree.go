@@ -28,7 +28,7 @@ func Walker(t *Tree) <-chan int {
 }
 
 // Create new tree holding the values from 0 to n-1.
-func NewRange(n) *Tree {
+func NewRange(n int) *Tree {
 	var t *Tree
 	for i := 0; i < n; i++ {
 		t = Insert(t, i)
