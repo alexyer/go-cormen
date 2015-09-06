@@ -140,6 +140,7 @@ func Predecessor(t *Tree) *Tree {
 	return y
 }
 
+// Replace one subtree as a child of its parent with another subtree.
 func Transplant(t1, t2 *Tree) *Tree {
 	if t1 == t1.Parent.Left {
 		t1.Parent.Left = t2
@@ -152,4 +153,25 @@ func Transplant(t1, t2 *Tree) *Tree {
 	}
 
 	return t1
+}
+
+// Delete node from the tree.
+func Delete(t *Tree) {
+	switch {
+	case t.Left == nil:
+		Transplant(t, t.Right)
+	case t.Right == nil:
+		Transplant(t, t.Left)
+	default:
+		y := Min(t.Right)
+		if y.Parent != t {
+			Transplant(y, y.Right)
+			y.Right = t.Right
+			y.Right.Parent = y
+		}
+
+		Transplant(t, y)
+		y.Left = t.Left
+		y.Left.Parent = y
+	}
 }
