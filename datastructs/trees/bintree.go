@@ -4,28 +4,29 @@ import "fmt"
 
 // Binary tree with integer values.
 type Tree struct {
-	Left  *Tree
-	Value int
-	Right *Tree
+	Left   *Tree
+	Value  int
+	Right  *Tree
+	Parent *Tree
 }
 
 func (t *Tree) String() string {
-	return fmt.Sprintf("{Left node: %p, Value: %d, Right node: %p}", t.Left, t.Value, t.Right)
+	return fmt.Sprintf("{Left node: %p, Value: %d, Right node: %p, Parent Node: %p, Self: %p}", t.Left, t.Value, t.Right, t.Parent, t)
 }
 
 // Traverse a tree depth-first, sending each Value on a channel.
-func Walk(t *Tree, ch chan int) {
+func Walk(t *Tree, ch chan *Tree) {
 	if t == nil {
 		return
 	}
 	Walk(t.Left, ch)
-	ch <- t.Value
+	ch <- t
 	Walk(t.Right, ch)
 }
 
 // Launch Walk in a new goroutine and return read-only channel of values.
-func Walker(t *Tree) <-chan int {
-	ch := make(chan int)
+func Walker(t *Tree) <-chan *Tree {
+	ch := make(chan *Tree)
 	go func() {
 		Walk(t, ch)
 		close(ch)
@@ -44,19 +45,26 @@ func NewRange(n int) *Tree {
 
 // Create new empty tree.
 func New() *Tree {
-	return &Tree{nil, 0, nil}
+	return &Tree{nil, 0, nil, nil}
 }
 
 // Insert new node into the tree.
 func Insert(t *Tree, val int) *Tree {
+	return InsertNode(t, t, val)
+}
+
+// Navigate through tree and insert node in proper place.
+func InsertNode(t, p *Tree, val int) *Tree {
 	if t == nil {
-		return &Tree{nil, val, nil}
+		return &Tree{nil, val, nil, nil}
 	}
 	if val < t.Value {
-		t.Left = Insert(t.Left, val)
+		t.Left = InsertNode(t.Left, t, val)
+		t.Parent = p
 		return t
 	}
-	t.Right = Insert(t.Right, val)
+	t.Right = InsertNode(t.Right, t, val)
+	t.Parent = p
 	return t
 }
 
