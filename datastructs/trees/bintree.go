@@ -102,3 +102,33 @@ func Max(t *Tree) *Tree {
 
 	return x
 }
+
+// Return successor of the given node
+func Successor(t *Tree) *Tree {
+	if t.Right != nil {
+		return Min(t.Right)
+	}
+
+	y := t.Parent
+	for y != nil && t == y.Right {
+		t = y
+		y = y.Parent
+	}
+
+	return y
+}
+
+// Return predecessor of the given node
+func Predecessor(t *Tree) *Tree {
+	if t.Left != nil {
+		return Max(t.Left)
+	}
+
+	y := t.Parent
+	for y != nil && t == y.Left {
+		t = y
+		y = y.Parent
+	}
+
+	return y
+}
