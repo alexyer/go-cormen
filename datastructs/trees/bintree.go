@@ -50,22 +50,29 @@ func New() *Tree {
 
 // Insert new node into the tree.
 func Insert(t *Tree, val int) *Tree {
-	return InsertNode(t, t, val)
-}
+	var y *Tree = nil
+	x := t
 
-// Navigate through tree and insert node in proper place.
-func InsertNode(t, p *Tree, val int) *Tree {
-	if t == nil {
-		return &Tree{nil, val, nil, nil}
+	z := New()
+	z.Value = val
+
+	for x != nil {
+		y = x
+		if z.Value < x.Value {
+			x = x.Left
+		} else {
+			x = x.Right
+		}
 	}
-	if val < t.Value {
-		t.Left = InsertNode(t.Left, t, val)
-		t.Parent = p
-		return t
+
+	z.Parent = y
+	if z.Value < y.Value {
+		y.Left = z
+	} else {
+		y.Right = z
 	}
-	t.Right = InsertNode(t.Right, t, val)
-	t.Parent = p
-	return t
+
+	return z
 }
 
 // The procedure begins its search at the root and traces a simple path downward in the tree.
@@ -131,4 +138,18 @@ func Predecessor(t *Tree) *Tree {
 	}
 
 	return y
+}
+
+func Transplant(t1, t2 *Tree) *Tree {
+	if t1 == t1.Parent.Left {
+		t1.Parent.Left = t2
+	} else {
+		t1.Parent.Right = t2
+	}
+
+	if t2 != nil {
+		t2.Parent = t1.Parent
+	}
+
+	return t1
 }
