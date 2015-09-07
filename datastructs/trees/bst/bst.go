@@ -1,6 +1,10 @@
-package bintree
+package bst
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/alexyer/go-cormen/datastructs/trees"
+)
 
 // Binary tree with integer values.
 type Tree struct {
@@ -15,32 +19,23 @@ func (t *Tree) String() string {
 }
 
 // Traverse a tree depth-first, sending each Value on a channel.
-func Walk(t *Tree, ch chan *Tree) {
+func (t *Tree) Walk(ch chan *Tree) {
 	if t == nil {
 		return
 	}
-	Walk(t.Left, ch)
+	t.Left.Walk(ch)
 	ch <- t
-	Walk(t.Right, ch)
+	t.Right.Walk(ch)
 }
 
 // Launch Walk in a new goroutine and return read-only channel of values.
-func Walker(t *Tree) <-chan *Tree {
+func (t *Tree) Walker() <-chan *Tree {
 	ch := make(chan *Tree)
 	go func() {
-		Walk(t, ch)
+		t.Walk(ch)
 		close(ch)
 	}()
 	return ch
-}
-
-// Create new tree holding the values from 0 to n-1.
-func NewRange(n int) *Tree {
-	var t *Tree
-	for i := 0; i < n; i++ {
-		t = Insert(t, i)
-	}
-	return t
 }
 
 // Create new empty tree.
@@ -49,7 +44,7 @@ func New() *Tree {
 }
 
 // Insert new node into the tree.
-func Insert(t *Tree, val int) *Tree {
+func (t *Tree) Insert(val int) trees.Tree {
 	var y *Tree = nil
 	x := t
 
@@ -76,20 +71,20 @@ func Insert(t *Tree, val int) *Tree {
 }
 
 // The procedure begins its search at the root and traces a simple path downward in the tree.
-func Search(t *Tree, val int) *Tree {
+func (t *Tree) Find(val int) trees.Tree {
 	if t == nil || val == t.Value {
 		return t
 	}
 
 	if val < t.Value {
-		return Search(t.Left, val)
+		return t.Left.Find(val)
 	} else {
-		return Search(t.Right, val)
+		return t.Right.Find(val)
 	}
 }
 
 // Return node with minimum value
-func Min(t *Tree) *Tree {
+func (t *Tree) Min() *Tree {
 	x := t
 
 	for x.Left != nil {
@@ -100,7 +95,7 @@ func Min(t *Tree) *Tree {
 }
 
 // Return node with maximum value
-func Max(t *Tree) *Tree {
+func (t *Tree) Max() *Tree {
 	x := t
 
 	for x.Right != nil {
@@ -111,9 +106,9 @@ func Max(t *Tree) *Tree {
 }
 
 // Return successor of the given node
-func Successor(t *Tree) *Tree {
+func (t *Tree) Successor() *Tree {
 	if t.Right != nil {
-		return Min(t.Right)
+		return t.Right.Min()
 	}
 
 	y := t.Parent
@@ -126,9 +121,9 @@ func Successor(t *Tree) *Tree {
 }
 
 // Return predecessor of the given node
-func Predecessor(t *Tree) *Tree {
+func (t *Tree) Predecessor() *Tree {
 	if t.Left != nil {
-		return Max(t.Left)
+		return t.Left.Max()
 	}
 
 	y := t.Parent
@@ -156,14 +151,14 @@ func Transplant(t1, t2 *Tree) *Tree {
 }
 
 // Delete node from the tree.
-func Delete(t *Tree) {
+func (t *Tree) Delete() {
 	switch {
 	case t.Left == nil:
 		Transplant(t, t.Right)
 	case t.Right == nil:
 		Transplant(t, t.Left)
 	default:
-		y := Min(t.Right)
+		y := t.Right.Min()
 		if y.Parent != t {
 			Transplant(y, y.Right)
 			y.Right = t.Right
